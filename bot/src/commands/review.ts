@@ -74,7 +74,7 @@ export async function handleModalSubmit(interaction: ModalSubmitInteraction) {
       headers: { "x-bot-secret": SECRET },
     });
     if (!statsRes.ok) throw new Error("Server not found");
-    const stats = await statsRes.json();
+    const stats = await statsRes.json() as { listingUrl: string };
 
     // Extract server ID from listing URL
     const serverId = stats.listingUrl.split("/servers/")[1];
@@ -96,7 +96,7 @@ export async function handleModalSubmit(interaction: ModalSubmitInteraction) {
     });
 
     if (!res.ok) {
-      const data = await res.json();
+      const data = await res.json() as { error?: string };
       await interaction.editReply(data.error ?? "Could not submit review.");
       return;
     }

@@ -18,14 +18,14 @@ async function apiFetch<T>(
   });
 
   if (!res.ok) {
-    const data = await res.json().catch(() => ({}));
-    throw Object.assign(new Error(data.error ?? "API error"), {
+    const data = await res.json().catch(() => ({} as Record<string, string>)) as Record<string, string>;
+    throw Object.assign(new Error(data["error"] ?? "API error"), {
       status: res.status,
       data,
     });
   }
 
-  return res.json();
+  return res.json() as Promise<T>;
 }
 
 export interface BumpResult {

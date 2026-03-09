@@ -74,9 +74,9 @@ function scheduleBumpReminder(
   const timeout = setTimeout(async () => {
     try {
       const channel = await interaction.client.channels.fetch(channelId);
-      if (channel?.isTextBased()) {
+      if (channel?.isTextBased() && "send" in channel) {
         const mention = roleId ? `<@&${roleId}> ` : "";
-        await channel.send(
+        await (channel as { send: (msg: string) => Promise<unknown> }).send(
           `${mention}⏰ Your server's bump cooldown is ready! Use \`/bump\` to get back to the top of DiscordNest!`
         );
       }
