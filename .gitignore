@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+bot/node_modules/
+
+# Build output
+.next/
+out/
+dist/
+bot/dist/
+
+# Environment variables — NEVER commit these
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+bot/.env
+
+# Prisma
+prisma/dev.db
+prisma/dev.db-journal
+
+# Misc
+.DS_Store
+*.pem
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
