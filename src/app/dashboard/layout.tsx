@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";

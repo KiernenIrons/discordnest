@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { ServerListingForm } from "@/components/dashboard/ServerListingForm";
 import { prisma } from "@/lib/prisma";
 
