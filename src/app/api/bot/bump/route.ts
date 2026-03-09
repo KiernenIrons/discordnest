@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { validateBotSecret } from "@/lib/bot-auth";
 import { BUMP_COOLDOWN_MS } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";

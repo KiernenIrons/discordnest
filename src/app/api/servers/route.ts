@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { FREE_SLOT_LIMIT, SERVERS_PER_PAGE } from "@/lib/constants";

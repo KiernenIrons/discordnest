@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { validateBotSecret } from "@/lib/bot-auth";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";

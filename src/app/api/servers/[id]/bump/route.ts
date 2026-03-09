@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { authOptions } from "@/lib/auth";
 import { BUMP_COOLDOWN_MS } from "@/lib/constants";
 import { prisma } from "@/lib/prisma";

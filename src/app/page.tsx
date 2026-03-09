@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { SearchBar } from "@/components/home/SearchBar";
 import { TagFilterChips } from "@/components/home/TagFilterChips";
 import { ServerCard } from "@/components/server/ServerCard";

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { GlassBadge } from "@/components/ui/GlassBadge";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { GlassCard } from "@/components/ui/GlassCard";
