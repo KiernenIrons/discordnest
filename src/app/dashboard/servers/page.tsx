@@ -4,10 +4,12 @@ import { GlassButton } from "@/components/ui/GlassButton";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { GlassBadge } from "@/components/ui/GlassBadge";
 import { BumpButton } from "@/components/dashboard/BumpButton";
+import { DeleteServerButton } from "@/components/dashboard/DeleteServerButton";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatMemberCount, formatRelativeTime } from "@/lib/utils";
 import { getServerSession } from "next-auth";
+import Image from "next/image";
 import Link from "next/link";
 import { Edit, Plus, Server } from "lucide-react";
 import { BUMP_COOLDOWN_MS } from "@/lib/constants";
@@ -66,8 +68,12 @@ export default async function ServersPage() {
                 className="p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4"
               >
                 {/* Icon */}
-                <div className="w-12 h-12 rounded-2xl bg-brand-purple/20 border border-brand-purple/20 flex items-center justify-center font-bold text-white text-lg shrink-0">
-                  {server.name[0]}
+                <div className="w-12 h-12 rounded-2xl bg-brand-purple/20 border border-brand-purple/20 flex items-center justify-center font-bold text-white text-lg shrink-0 overflow-hidden">
+                  {server.iconUrl ? (
+                    <Image src={server.iconUrl} alt="" width={48} height={48} className="w-full h-full object-cover" />
+                  ) : (
+                    server.name[0]
+                  )}
                 </div>
 
                 {/* Info */}
@@ -108,6 +114,7 @@ export default async function ServersPage() {
                       <Edit size={13} /> Edit
                     </GlassButton>
                   </Link>
+                  <DeleteServerButton serverId={server.id} serverName={server.name} />
                 </div>
               </GlassCard>
             );

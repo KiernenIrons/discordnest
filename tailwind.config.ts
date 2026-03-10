@@ -15,10 +15,10 @@ const config: Config = {
           hover: "rgba(255, 255, 255, 0.13)",
         },
         brand: {
-          purple: "#7c3aed",
-          "purple-light": "#a78bfa",
-          blue: "#3b82f6",
-          glow: "#a78bfa",
+          purple: "#8b5cf6",
+          "purple-light": "#c4b5fd",
+          blue: "#60a5fa",
+          glow: "#c4b5fd",
         },
       },
       backdropBlur: {
@@ -29,8 +29,8 @@ const config: Config = {
           "0 8px 32px rgba(0, 0, 0, 0.37), inset 0 1px 0 rgba(255,255,255,0.1)",
         "glass-hover":
           "0 12px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.18)",
-        glow: "0 0 20px rgba(124, 58, 237, 0.4)",
-        "glow-blue": "0 0 20px rgba(59, 130, 246, 0.4)",
+        glow: "0 0 24px rgba(139, 92, 246, 0.55)",
+        "glow-blue": "0 0 24px rgba(96, 165, 250, 0.55)",
       },
       backgroundImage: {
         "page-gradient":

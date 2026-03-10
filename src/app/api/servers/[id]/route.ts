@@ -66,7 +66,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     const body = await req.json();
     const parsed = updateSchema.safeParse(body);
     if (!parsed.success) {
-      return NextResponse.json({ error: "Invalid input" }, { status: 400 });
+      const fields = parsed.error.flatten().fieldErrors;
+      const first = Object.entries(fields).find(([, v]) => v?.length)?.[0];
+      const msg = first ? `${first}: ${fields[first]?.[0]}` : "Invalid input";
+      return NextResponse.json({ error: msg }, { status: 400 });
     }
 
     const { selectedTags, customTags, ...rest } = parsed.data;
