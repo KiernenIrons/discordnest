@@ -46,6 +46,8 @@ const updateSchema = z.object({
   isPublished: z.boolean().optional(),
   selectedTags: z.array(z.string()).max(15).optional(),
   customTags: z.array(z.string().max(30)).max(5).optional(),
+  iconUrl: z.string().url().nullable().optional(),
+  bannerUrl: z.string().url().nullable().optional(),
 });
 
 export async function PATCH(req: NextRequest, { params }: Params) {

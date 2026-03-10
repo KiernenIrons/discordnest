@@ -6,9 +6,11 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { GlassInput } from "@/components/ui/GlassInput";
 import { GlassTextarea } from "@/components/ui/GlassTextarea";
 import { MAX_CUSTOM_TAGS, DESCRIPTION_MAX, SHORT_DESC_MAX } from "@/lib/constants";
+import { useUploadThing } from "@/lib/uploadthing-client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Plus, X } from "lucide-react";
+import { Plus, X, Upload, Image as ImageIcon } from "lucide-react";
+import Image from "next/image";
 
 interface Tag {
   id: string;
@@ -43,6 +45,15 @@ export function ServerListingForm({ tags, mode, server }: ServerListingFormProps
   const [error, setError] = useState<string | null>(null);
   const [customTagInput, setCustomTagInput] = useState("");
   const [customTags, setCustomTags] = useState<string[]>(server?.customTags ?? []);
+  const [iconUrl, setIconUrl] = useState<string | null>(server?.iconUrl ?? null);
+  const [bannerUrl, setBannerUrl] = useState<string | null>(server?.bannerUrl ?? null);
+
+  const { startUpload: startIconUpload, isUploading: iconUploading } = useUploadThing("serverIcon", {
+    onClientUploadComplete: (res) => { if (res[0]) setIconUrl(res[0].url); },
+  });
+  const { startUpload: startBannerUpload, isUploading: bannerUploading } = useUploadThing("serverBanner", {
+    onClientUploadComplete: (res) => { if (res[0]) setBannerUrl(res[0].url); },
+  });
 
   // In edit mode, only keep slugs that belong to the predefined tag list
   const predefinedSlugs = new Set(tags.map((t) => t.slug));
@@ -93,7 +104,7 @@ export function ServerListingForm({ tags, mode, server }: ServerListingFormProps
       const res = await fetch(endpoint, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, customTags }),
+        body: JSON.stringify({ ...form, customTags, iconUrl, bannerUrl }),
       });
 
       if (res.status === 402) {
@@ -153,6 +164,70 @@ export function ServerListingForm({ tags, mode, server }: ServerListingFormProps
           <p className="text-xs text-zinc-600 mt-1">
             Make sure your invite link doesn&apos;t expire
           </p>
+        </div>
+
+        {/* Images */}
+        <div className="flex gap-4">
+          {/* Server icon */}
+          <div>
+            <label className="block text-sm font-medium text-zinc-300 mb-2">
+              Server Icon
+            </label>
+            <label className="cursor-pointer block">
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                disabled={iconUploading}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) startIconUpload([file]);
+                }}
+              />
+              <div className="w-20 h-20 rounded-2xl border-2 border-dashed border-white/15 hover:border-brand-purple/50 transition-colors flex items-center justify-center overflow-hidden bg-white/5">
+                {iconUrl ? (
+                  <Image src={iconUrl} alt="icon" width={80} height={80} className="w-full h-full object-cover" />
+                ) : iconUploading ? (
+                  <span className="text-xs text-zinc-500">Uploading…</span>
+                ) : (
+                  <ImageIcon size={24} className="text-zinc-600" />
+                )}
+              </div>
+            </label>
+            <p className="text-xs text-zinc-600 mt-1">Max 2MB</p>
+          </div>
+
+          {/* Server banner */}
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-zinc-300 mb-2">
+              Banner Image
+            </label>
+            <label className="cursor-pointer block">
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                disabled={bannerUploading}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) startBannerUpload([file]);
+                }}
+              />
+              <div className="h-20 rounded-xl border-2 border-dashed border-white/15 hover:border-brand-purple/50 transition-colors flex items-center justify-center overflow-hidden bg-white/5 gap-2">
+                {bannerUrl ? (
+                  <Image src={bannerUrl} alt="banner" width={400} height={80} className="w-full h-full object-cover" />
+                ) : bannerUploading ? (
+                  <span className="text-xs text-zinc-500">Uploading…</span>
+                ) : (
+                  <>
+                    <Upload size={16} className="text-zinc-600" />
+                    <span className="text-xs text-zinc-600">Upload a banner (recommended: 1200×400)</span>
+                  </>
+                )}
+              </div>
+            </label>
+            <p className="text-xs text-zinc-600 mt-1">Max 4MB</p>
+          </div>
         </div>
 
         {/* Short description */}

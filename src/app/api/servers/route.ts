@@ -68,6 +68,8 @@ const createSchema = z.object({
   isPublished: z.boolean().default(false),
   selectedTags: z.array(z.string()).max(15).default([]),
   customTags: z.array(z.string().max(30)).max(5).default([]),
+  iconUrl: z.string().url().nullable().optional(),
+  bannerUrl: z.string().url().nullable().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -86,7 +88,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { name, description, shortDesc, inviteUrl, isNsfw, isPublished, selectedTags, customTags } =
+    const { name, description, shortDesc, inviteUrl, isNsfw, isPublished, selectedTags, customTags, iconUrl: formIconUrl, bannerUrl: formBannerUrl } =
       parsed.data;
 
     // Check free slot limit
@@ -109,9 +111,10 @@ export async function POST(req: NextRequest) {
       isPremium = true;
     }
 
-    // Validate invite URL via Discord API (non-fatal)
+    // Validate invite URL via Discord API (non-fatal) + auto-fetch icon
     let guildId: string | undefined;
     let memberCount = 0;
+    let discordIconUrl: string | null = null;
     try {
       const inviteCode = inviteUrl
         .replace(/https?:\/\/discord\.gg\//, "")
@@ -126,6 +129,9 @@ export async function POST(req: NextRequest) {
         const data = await discordRes.json();
         guildId = data.guild?.id;
         memberCount = data.approximate_member_count ?? 0;
+        if (guildId && data.guild?.icon) {
+          discordIconUrl = `https://cdn.discordapp.com/icons/${guildId}/${data.guild.icon}.png?size=256`;
+        }
       }
     } catch {
       // non-fatal
@@ -168,6 +174,9 @@ export async function POST(req: NextRequest) {
         isNsfw,
         isPublished,
         isPremium,
+        // User-uploaded icon takes priority; fall back to Discord's icon
+        iconUrl: formIconUrl ?? discordIconUrl,
+        bannerUrl: formBannerUrl ?? null,
         tags: {
           create: Array.from(tagMap.values()),
         },
