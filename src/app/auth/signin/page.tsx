@@ -3,12 +3,14 @@
 import { GlassButton } from "@/components/ui/GlassButton";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 export default function SignInPage() {
   const { data: session } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
 
   useEffect(() => {
     if (session) router.replace("/dashboard");
@@ -24,6 +26,11 @@ export default function SignInPage() {
         <p className="text-zinc-400 text-sm mb-8">
           Sign in with your Discord account to manage your server listings and profile.
         </p>
+        {error && (
+          <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs text-left">
+            Auth error: <span className="font-mono">{error}</span>
+          </div>
+        )}
         <GlassButton
           variant="primary"
           size="lg"
