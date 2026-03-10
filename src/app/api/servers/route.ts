@@ -169,7 +169,7 @@ export async function POST(req: NextRequest) {
         isPublished,
         isPremium,
         tags: {
-          create: [...tagMap.values()],
+          create: Array.from(tagMap.values()),
         },
       },
     });

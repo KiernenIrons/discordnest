@@ -96,7 +96,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       customTagRecords.forEach((t) => tagMap.set(t.id, { serverId: params.id, tagId: t.id, isCustom: true }));
 
       await prisma.serverTag.createMany({
-        data: [...tagMap.values()],
+        data: Array.from(tagMap.values()),
       });
     }
 
