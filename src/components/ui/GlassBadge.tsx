@@ -22,7 +22,7 @@ export function GlassBadge({
         "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium",
         "border transition-all duration-150",
         active
-          ? "bg-brand-purple/20 border-brand-purple/50 text-violet-300"
+          ? "bg-brand-purple border-brand-purple text-white shadow-[0_0_12px_rgba(124,58,237,0.6)] scale-105"
           : "bg-white/5 border-white/10 text-zinc-400",
         onClick && "cursor-pointer hover:border-white/25 hover:text-zinc-200",
         className
