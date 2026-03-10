@@ -19,6 +19,13 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
+    if (!server.isPublished) {
+      return NextResponse.json(
+        { error: "Only published servers can be bumped. Use /setup in your Discord server to publish." },
+        { status: 400 }
+      );
+    }
+
     // Check cooldown
     if (server.bumpedAt) {
       const elapsed = Date.now() - new Date(server.bumpedAt).getTime();

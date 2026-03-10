@@ -58,8 +58,9 @@ export default async function ServersPage() {
         <div className="flex flex-col gap-4">
           {servers.map((server) => {
             const canBump =
-              !server.bumpedAt ||
-              now - new Date(server.bumpedAt).getTime() >= BUMP_COOLDOWN_MS;
+              server.isPublished &&
+              (!server.bumpedAt ||
+                now - new Date(server.bumpedAt).getTime() >= BUMP_COOLDOWN_MS);
 
             return (
               <GlassCard
@@ -102,7 +103,11 @@ export default async function ServersPage() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-2 shrink-0">
-                  {canBump ? (
+                  {!server.isPublished ? (
+                    <GlassButton variant="secondary" size="sm" disabled>
+                      Draft — run /setup
+                    </GlassButton>
+                  ) : canBump ? (
                     <BumpButton serverId={server.id} />
                   ) : (
                     <GlassButton variant="secondary" size="sm" disabled>
