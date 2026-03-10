@@ -47,7 +47,12 @@ export default async function EditServerPage({ params }: PageProps) {
           bannerUrl: server.bannerUrl,
           isNsfw: server.isNsfw,
           isPublished: server.isPublished,
-          selectedTags: server.tags.map((st) => st.tag.slug),
+          selectedTags: server.tags
+            .filter((st) => st.tag.isPredefined)
+            .map((st) => st.tag.slug),
+          customTags: server.tags
+            .filter((st) => !st.tag.isPredefined)
+            .map((st) => st.tag.name),
         }}
       />
     </div>

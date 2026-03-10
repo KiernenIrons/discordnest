@@ -66,7 +66,7 @@ const createSchema = z.object({
   inviteUrl: z.string().url(),
   isNsfw: z.boolean().default(false),
   isPublished: z.boolean().default(false),
-  selectedTags: z.array(z.string()).max(8).default([]),
+  selectedTags: z.array(z.string()).max(15).default([]),
   customTags: z.array(z.string().max(30)).max(5).default([]),
 });
 

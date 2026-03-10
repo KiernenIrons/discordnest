@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { GlassButton } from "@/components/ui/GlassButton";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { GlassBadge } from "@/components/ui/GlassBadge";
+import { BumpButton } from "@/components/dashboard/BumpButton";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatMemberCount, formatRelativeTime } from "@/lib/utils";
@@ -96,11 +97,7 @@ export default async function ServersPage() {
                 {/* Actions */}
                 <div className="flex items-center gap-2 shrink-0">
                   {canBump ? (
-                    <form action={`/api/servers/${server.id}/bump`} method="POST">
-                      <GlassButton variant="primary" size="sm" type="submit">
-                        Bump
-                      </GlassButton>
-                    </form>
+                    <BumpButton serverId={server.id} />
                   ) : (
                     <GlassButton variant="secondary" size="sm" disabled>
                       Bump ready soon

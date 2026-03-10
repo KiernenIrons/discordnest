@@ -44,7 +44,7 @@ const updateSchema = z.object({
   inviteUrl: z.string().url().optional(),
   isNsfw: z.boolean().optional(),
   isPublished: z.boolean().optional(),
-  selectedTags: z.array(z.string()).max(8).optional(),
+  selectedTags: z.array(z.string()).max(15).optional(),
   customTags: z.array(z.string().max(30)).max(5).optional(),
 });
 

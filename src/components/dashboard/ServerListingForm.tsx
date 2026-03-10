@@ -28,6 +28,7 @@ interface ExistingServer {
   isNsfw: boolean;
   isPublished: boolean;
   selectedTags: string[];
+  customTags?: string[];
 }
 
 interface ServerListingFormProps {
@@ -41,7 +42,11 @@ export function ServerListingForm({ tags, mode, server }: ServerListingFormProps
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [customTagInput, setCustomTagInput] = useState("");
-  const [customTags, setCustomTags] = useState<string[]>([]);
+  const [customTags, setCustomTags] = useState<string[]>(server?.customTags ?? []);
+
+  // In edit mode, only keep slugs that belong to the predefined tag list
+  const predefinedSlugs = new Set(tags.map((t) => t.slug));
+  const initialSelected = (server?.selectedTags ?? []).filter((s) => predefinedSlugs.has(s));
 
   const [form, setForm] = useState({
     name: server?.name ?? "",
@@ -50,7 +55,7 @@ export function ServerListingForm({ tags, mode, server }: ServerListingFormProps
     inviteUrl: server?.inviteUrl ?? "",
     isNsfw: server?.isNsfw ?? false,
     isPublished: server?.isPublished ?? false,
-    selectedTags: server?.selectedTags ?? [],
+    selectedTags: initialSelected,
   });
 
   const toggleTag = (slug: string) => {
