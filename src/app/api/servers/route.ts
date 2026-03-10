@@ -151,6 +151,11 @@ export async function POST(req: NextRequest) {
     const user = await prisma.user.findUnique({ where: { id: session.user.id } });
     if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
+    // Deduplicate — a custom tag name matching a predefined slug returns the same DB row
+    const tagMap = new Map<string, { tagId: string; isCustom: boolean }>();
+    tagRecords.forEach((t) => tagMap.set(t.id, { tagId: t.id, isCustom: false }));
+    customTagRecords.forEach((t) => tagMap.set(t.id, { tagId: t.id, isCustom: true }));
+
     const server = await prisma.server.create({
       data: {
         guildId: guildId ?? `manual-${Date.now()}`,
@@ -164,10 +169,7 @@ export async function POST(req: NextRequest) {
         isPublished,
         isPremium,
         tags: {
-          create: [
-            ...tagRecords.map((t) => ({ tagId: t.id, isCustom: false })),
-            ...customTagRecords.map((t) => ({ tagId: t.id, isCustom: true })),
-          ],
+          create: [...tagMap.values()],
         },
       },
     });

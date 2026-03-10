@@ -90,11 +90,13 @@ export async function PATCH(req: NextRequest, { params }: Params) {
           )
         : [];
 
+      // Deduplicate — custom tag name matching a predefined slug returns the same DB row
+      const tagMap = new Map<string, { serverId: string; tagId: string; isCustom: boolean }>();
+      tagRecords.forEach((t) => tagMap.set(t.id, { serverId: params.id, tagId: t.id, isCustom: false }));
+      customTagRecords.forEach((t) => tagMap.set(t.id, { serverId: params.id, tagId: t.id, isCustom: true }));
+
       await prisma.serverTag.createMany({
-        data: [
-          ...tagRecords.map((t) => ({ serverId: params.id, tagId: t.id, isCustom: false })),
-          ...customTagRecords.map((t) => ({ serverId: params.id, tagId: t.id, isCustom: true })),
-        ],
+        data: [...tagMap.values()],
       });
     }
 
