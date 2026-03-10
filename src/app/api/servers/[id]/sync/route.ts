@@ -24,12 +24,19 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
       .replace(/https?:\/\/discord\.com\/invite\//, "");
 
     const botToken = process.env.DISCORD_BOT_TOKEN;
-    const discordRes = await fetch(
+    const fetchOpts = botToken ? { headers: { Authorization: `Bot ${botToken}` } } : {};
+
+    // Try with member counts first, fall back to basic lookup if that fails
+    let discordRes = await fetch(
       `https://discord.com/api/v10/invites/${inviteCode}?with_counts=true`,
-      botToken
-        ? { headers: { Authorization: `Bot ${botToken}` } }
-        : {}
+      fetchOpts
     );
+    if (!discordRes.ok) {
+      discordRes = await fetch(
+        `https://discord.com/api/v10/invites/${inviteCode}`,
+        fetchOpts
+      );
+    }
 
     if (!discordRes.ok) {
       const errBody = await discordRes.json().catch(() => ({})) as Record<string, unknown>;
