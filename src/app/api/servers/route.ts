@@ -119,11 +119,10 @@ export async function POST(req: NextRequest) {
       const inviteCode = inviteUrl
         .replace(/https?:\/\/discord\.gg\//, "")
         .replace(/https?:\/\/discord\.com\/invite\//, "");
+      const botToken = process.env.DISCORD_BOT_TOKEN;
       const discordRes = await fetch(
         `https://discord.com/api/v10/invites/${inviteCode}?with_counts=true`,
-        {
-          headers: { Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN ?? ""}` },
-        }
+        botToken ? { headers: { Authorization: `Bot ${botToken}` } } : {}
       );
       if (discordRes.ok) {
         const data = await discordRes.json();

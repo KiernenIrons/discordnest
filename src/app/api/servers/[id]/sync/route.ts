@@ -23,16 +23,19 @@ export async function POST(_req: NextRequest, { params }: { params: { id: string
       .replace(/https?:\/\/discord\.gg\//, "")
       .replace(/https?:\/\/discord\.com\/invite\//, "");
 
+    const botToken = process.env.DISCORD_BOT_TOKEN;
     const discordRes = await fetch(
       `https://discord.com/api/v10/invites/${inviteCode}?with_counts=true`,
-      {
-        headers: { Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN ?? ""}` },
-      }
+      botToken
+        ? { headers: { Authorization: `Bot ${botToken}` } }
+        : {}
     );
 
     if (!discordRes.ok) {
+      const errBody = await discordRes.json().catch(() => ({})) as Record<string, unknown>;
+      console.error("[sync] Discord API error", discordRes.status, errBody);
       return NextResponse.json(
-        { error: "Could not reach Discord — check invite link is valid." },
+        { error: `Discord returned ${discordRes.status} — the invite link may be expired or invalid.` },
         { status: 400 }
       );
     }
