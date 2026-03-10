@@ -82,11 +82,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const parsed = createSchema.safeParse(body);
     if (!parsed.success) {
-      const fields = parsed.error.flatten().fieldErrors;
+      const fields = parsed.error.flatten().fieldErrors as Record<string, string[] | undefined>;
       const first = Object.entries(fields).find(([, v]) => v?.length)?.[0];
-      const msg = first
-        ? `${first}: ${fields[first]?.[0]}`
-        : "Invalid input";
+      const msg = first ? `${first}: ${fields[first]?.[0]}` : "Invalid input";
       return NextResponse.json({ error: msg }, { status: 400 });
     }
 
